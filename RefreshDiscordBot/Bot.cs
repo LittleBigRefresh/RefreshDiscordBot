@@ -95,7 +95,6 @@ public class Bot : IDisposable
             {
                 foreach (Module module in _modules.Where(m => m.ShouldRun(now)))
                 {
-                    module.LastRan = now;
                     await module.Update();
                 }
             }
