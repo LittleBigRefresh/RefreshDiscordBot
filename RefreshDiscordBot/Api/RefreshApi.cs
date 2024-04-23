@@ -35,6 +35,11 @@ public class RefreshApi : IDisposable
     {
         return this.GetAsync<RefreshStatistics>("statistics", ct);
     }
+    
+    public Task<IEnumerable<RefreshRoom>> GetRoomListingAsync(CancellationToken ct)
+    {
+        return this.GetAsync<IEnumerable<RefreshRoom>>("rooms", ct);
+    }
 
     private void Log(LogLevel level, ReadOnlySpan<char> content)
     {
