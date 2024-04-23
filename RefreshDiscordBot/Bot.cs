@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Discord;
 using Discord.WebSocket;
 using NotEnoughLogs;
@@ -92,9 +93,9 @@ public class Bot : IDisposable
             
             try
             {
-                foreach (Module module in _modules.Where(m => m.ShouldRun(now)))
+                foreach (Module module in _modules)
                 {
-                    await module.Update();
+                    await ProcessModule(module, now);
                 }
             }
             catch(Exception e)
@@ -105,6 +106,12 @@ public class Bot : IDisposable
             await Task.Delay(10);
         }
         this._logger.LogWarning("Update", "Update thread stopping");
+    }
+    
+    private async Task ProcessModule(Module module, long now)
+    {
+        if (!module.ShouldRun(now)) return;
+        await module.Update();
     }
 
     public void Dispose()
