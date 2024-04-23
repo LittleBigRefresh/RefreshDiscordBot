@@ -12,11 +12,28 @@ public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, lo
     protected override uint RunFrequency => 301_000;
     private int _lastCount = -1;
 
+    private const string Header = "Players Online: ";
+
     private SocketVoiceChannel _channel = null!;
 
     public override async Task Ready()
     {
         this._channel = (SocketVoiceChannel)await this.Bot.Client.GetChannelAsync(this.Bot.Config.PlayersOnlineChannel);
+        SetCountFromChannelName();
+    }
+
+    private void SetCountFromChannelName()
+    {
+        try
+        {
+            ReadOnlySpan<char> countStr = this._channel.Name.AsSpan()[Header.Length..];
+            this._lastCount = int.Parse(countStr);
+            Log(LogLevel.Info, $"Recovered previous count from channel name: {this._lastCount}");
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public override async Task Update()
@@ -32,7 +49,7 @@ public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, lo
         Log(LogLevel.Info, $"Updating player count channel to {count}");
         await this._channel.ModifyAsync(properties =>
         {
-            properties.Name = $"Players Online: {count}";
+            properties.Name = Header + count;
         });
     }
 }
