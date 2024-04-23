@@ -14,6 +14,7 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
     {
         this._activities =
         [
+            new RandomUserActivity(),
             new StatisticActivity(ActivityType.Watching, stats => $"{stats.ActiveUsers} players"),
             new StatisticActivity(ActivityType.Playing, stats => $"{stats.TotalLevels} levels"),
             new StatisticActivity(ActivityType.Playing, stats => $"with {stats.CurrentIngamePlayersCount} online players"),
@@ -43,16 +44,44 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
 
     public override async Task Update(CancellationToken ct)
     {
-        Activity activity = this._activities[Random.Shared.Next(0, this._activities.Count)];
-        await activity.SetActivity(this.Bot, ct);
+        while (true)
+        {
+            Activity activity = this._activities[Random.Shared.Next(0, this._activities.Count)];
+            bool success = await activity.SetActivity(this.Bot, ct);
+            
+            if(!success) continue;
         
-        ct.ThrowIfCancellationRequested();
+            ct.ThrowIfCancellationRequested();
         
-        this.Log(LogLevel.Info, $"Our activity is now '*{activity.Type}* {activity.Text}'");
-        if (activity.Type == ActivityType.CustomStatus) 
-            await this.Bot.Client.SetCustomStatusAsync(activity.Text);
-        else
-            await this.Bot.Client.SetActivityAsync(new Game(activity.Text, activity.Type));
+            this.Log(LogLevel.Info, $"Our activity is now '*{activity.Type}* {activity.Text}'");
+            if (activity.Type == ActivityType.CustomStatus) 
+                await this.Bot.Client.SetCustomStatusAsync(activity.Text);
+            else
+                await this.Bot.Client.SetActivityAsync(new Game(activity.Text, activity.Type));
+
+            break;
+        }
+    }
+
+    private class RandomUserActivity : Activity
+    {
+        private RefreshRoomPlayerId _player = null!;
+        public override string Text => this._player.Username;
+        public override ActivityType Type => ActivityType.Watching;
+
+        public override async Task<bool> SetActivity(Bot bot, CancellationToken ct)
+        {
+            List<RefreshRoom> rooms = (await bot.Api.GetRoomListingAsync(ct)).ToList();
+            if (rooms.Count < 1) return false;
+            
+            RefreshRoom room = rooms[Random.Shared.Next(0, rooms.Count)];
+            List<RefreshRoomPlayerId> playerIds = room.PlayerIds.ToList();
+            if (playerIds.Count < 1) return false; // if this ever gets hit i'll shit myself
+
+            RefreshRoomPlayerId playerId = playerIds[Random.Shared.Next(0, playerIds.Count)];
+            this._player = playerId;
+            return true;
+        }
     }
 
     private class StatisticActivity : Activity
@@ -63,9 +92,10 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
         public override ActivityType Type { get; }
         public override string Text => _func(this._statistics);
 
-        public override async Task SetActivity(Bot bot, CancellationToken ct)
+        public override async Task<bool> SetActivity(Bot bot, CancellationToken ct)
         {
             this._statistics = await bot.Api.GetStatisticsAsync(ct);
+            return true;
         }
 
         public StatisticActivity(ActivityType type, Func<RefreshStatistics, string> func)
@@ -80,7 +110,7 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
         public virtual string Text { get; } = null!;
         public virtual ActivityType Type { get; } = ActivityType.CustomStatus;
         
-        public virtual Task SetActivity(Bot bot, CancellationToken ct) => Task.CompletedTask;
+        public virtual Task<bool> SetActivity(Bot bot, CancellationToken ct) => Task.FromResult(true);
         
         protected Activity() {}
 
