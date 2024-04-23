@@ -40,7 +40,7 @@ public abstract class Module
         return Task.CompletedTask;
     }
 
-    public virtual Task Update()
+    public virtual Task Update(CancellationToken ct)
     {
         return Task.CompletedTask;
     }

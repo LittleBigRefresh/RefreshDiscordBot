@@ -1,3 +1,4 @@
+using Discord;
 using Discord.WebSocket;
 using NotEnoughLogs;
 using RefreshDiscordBot.Api.Types;
@@ -36,13 +37,14 @@ public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, lo
         }
     }
 
-    public override async Task Update()
+    public override async Task Update(CancellationToken ct)
     {
-        RefreshStatistics statistics = await this.Bot.Api.GetStatisticsAsync();
+        RefreshStatistics statistics = await this.Bot.Api.GetStatisticsAsync(ct);
         int count = statistics.CurrentIngamePlayersCount;
-        
+
         Log(LogLevel.Debug, $"{count} players online");
 
+        ct.ThrowIfCancellationRequested();
         if (count == this._lastCount) return;
         this._lastCount = count;
 
@@ -50,6 +52,9 @@ public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, lo
         await this._channel.ModifyAsync(properties =>
         {
             properties.Name = Header + count;
+        }, new RequestOptions
+        {
+            CancelToken = ct
         });
     }
 }

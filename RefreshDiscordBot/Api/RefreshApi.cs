@@ -20,9 +20,9 @@ public class RefreshApi : IDisposable
         this._logger = logger;
     }
     
-    private async Task<TType> GetAsync<TType>(string endpoint)
+    private async Task<TType> GetAsync<TType>(string endpoint, CancellationToken ct)
     {
-        RefreshApiResponse<TType>? response = await this._client.GetFromJsonAsync<RefreshApiResponse<TType>>(endpoint);
+        RefreshApiResponse<TType>? response = await this._client.GetFromJsonAsync<RefreshApiResponse<TType>>(endpoint, ct);
         if (response == null) throw new Exception("Couldn't deserialize/gather a response from the server.");
 
         if (!response.Success)
@@ -31,9 +31,9 @@ public class RefreshApi : IDisposable
         return response.Data!;
     }
 
-    public Task<RefreshStatistics> GetStatisticsAsync()
+    public Task<RefreshStatistics> GetStatisticsAsync(CancellationToken ct)
     {
-        return this.GetAsync<RefreshStatistics>("statistics");
+        return this.GetAsync<RefreshStatistics>("statistics", ct);
     }
 
     private void Log(LogLevel level, ReadOnlySpan<char> content)

@@ -111,7 +111,12 @@ public class Bot : IDisposable
     private async Task ProcessModule(Module module, long now)
     {
         if (!module.ShouldRun(now)) return;
-        await module.Update();
+        
+        CancellationTokenSource cts = new(5_000);
+        CancellationToken ct = cts.Token;
+        
+        await module.Update(ct);
+        ct.ThrowIfCancellationRequested();
     }
 
     public void Dispose()
