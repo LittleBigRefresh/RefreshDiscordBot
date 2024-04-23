@@ -39,6 +39,7 @@ public class Bot : IDisposable
         this._logger.LogInfo("Bot", "Initialized bot");
         
         this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
+        this._modules.Add(new RandomActivityModule(this, this._logger));
     }
 
     private Task OnLog(LogMessage message)
