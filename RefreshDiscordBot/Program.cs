@@ -7,12 +7,12 @@ using RefreshDiscordBot.Configuration;
 
 Logger logger = new([new ConsoleSink()], new LoggerConfiguration
 {
+    Behaviour = new DirectLoggingBehaviour(),
 #if DEBUG
     MaxLevel = LogLevel.Trace,
 #else
-    MaxLevel = LogLevel.Info
+    MaxLevel = LogLevel.Info,
 #endif
-    Behaviour = new DirectLoggingBehaviour(),
 });
 
 BotConfiguration? config = null;
