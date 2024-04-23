@@ -9,17 +9,16 @@ namespace RefreshDiscordBot;
 
 public class Bot : IDisposable
 {
-    private readonly BotConfiguration _config;
-    private readonly Logger _logger;
-    
-    public DiscordSocketClient Client;
+    public readonly BotConfiguration Config;
+    public readonly DiscordSocketClient Client;
     public readonly RefreshApi Api;
 
+    private readonly Logger _logger;
     private readonly List<Module> _modules = [];
 
     public Bot(Logger logger, BotConfiguration config)
     {
-        this._config = config;
+        this.Config = config;
         this._logger = logger;
         
         DiscordSocketClient client = new(new DiscordSocketConfig
@@ -65,7 +64,7 @@ public class Bot : IDisposable
 
     public async Task Start()
     {
-        await this.Client.LoginAsync(TokenType.Bot, this._config.DiscordToken);
+        await this.Client.LoginAsync(TokenType.Bot, this.Config.DiscordToken);
         await this.Client.StartAsync();
     }
 

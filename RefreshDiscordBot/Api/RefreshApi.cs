@@ -1,4 +1,7 @@
+using System.Net.Http.Json;
+using System.Text.Json;
 using NotEnoughLogs;
+using RefreshDiscordBot.Api.Types;
 
 namespace RefreshDiscordBot.Api;
 
@@ -15,6 +18,22 @@ public class RefreshApi : IDisposable
         };
 
         this._logger = logger;
+    }
+    
+    private async Task<TType> GetAsync<TType>(string endpoint)
+    {
+        RefreshApiResponse<TType>? response = await this._client.GetFromJsonAsync<RefreshApiResponse<TType>>(endpoint);
+        if (response == null) throw new Exception("Couldn't deserialize/gather a response from the server.");
+
+        if (!response.Success)
+            throw new NotImplementedException("error handling");
+
+        return response.Data!;
+    }
+
+    public Task<RefreshStatistics> GetStatisticsAsync()
+    {
+        return this.GetAsync<RefreshStatistics>("statistics");
     }
 
     private void Log(LogLevel level, ReadOnlySpan<char> content)
