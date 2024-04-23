@@ -17,6 +17,11 @@ public class RefreshApi : IDisposable
         this._logger = logger;
     }
 
+    private void Log(LogLevel level, ReadOnlySpan<char> content)
+    {
+        this._logger.Log(level, "API", content);
+    }
+
     public void Dispose()
     {
         this._client.Dispose();
