@@ -44,6 +44,11 @@ public class RefreshApi : IDisposable
         return this.GetAsync<IEnumerable<RefreshRoom>>("rooms", ct);
     }
 
+    public Task<RefreshUser> GetUserByUsername(string username, CancellationToken ct)
+    {
+        return this.GetAsync<RefreshUser>("users/name/" + username, ct);
+    }
+
     private void Log(LogLevel level, ReadOnlySpan<char> content)
     {
         this._logger.Log(level, "API", content);
