@@ -26,12 +26,13 @@ public class Bot : IDisposable
         {
             AlwaysDownloadUsers = false,
             AlwaysDownloadDefaultStickers = false,
-            GatewayIntents = GatewayIntents.Guilds,
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.MessageContent | GatewayIntents.GuildMessages,
             LogLevel = LogSeverity.Verbose
         });
 
         client.Log += OnLog;
         client.Ready += OnReady;
+        client.MessageReceived += OnMessage;
 
         this.Client = client;
         this.Api = new RefreshApi(this._logger, config.ApiBaseUrl);
@@ -40,6 +41,7 @@ public class Bot : IDisposable
         
         this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
         this._modules.Add(new RandomActivityModule(this, this._logger));
+        this._modules.Add(new EmbedFromMessageModule(this, this._logger));
     }
 
     private Task OnLog(LogMessage message)
@@ -77,6 +79,20 @@ public class Bot : IDisposable
             await module.Ready();
 
         this.StartUpdateThread();
+    }
+    
+    private async Task OnMessage(SocketMessage message)
+    {
+        if (message is SocketUserMessage userMessage && !userMessage.Author.IsBot)
+        {
+            foreach (Module module in _modules)
+            {
+                CancellationTokenSource cts = new(5_000);
+                CancellationToken ct = cts.Token;
+                
+                await module.OnUserMessage(userMessage, ct);
+            }
+        }
     }
 
     private void StartUpdateThread()

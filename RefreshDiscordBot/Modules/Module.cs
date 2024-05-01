@@ -1,3 +1,4 @@
+using Discord.WebSocket;
 using NotEnoughLogs;
 
 namespace RefreshDiscordBot.Modules;
@@ -41,6 +42,11 @@ public abstract class Module
     }
 
     public virtual Task Update(CancellationToken ct)
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual Task OnUserMessage(SocketUserMessage message, CancellationToken ct)
     {
         return Task.CompletedTask;
     }
