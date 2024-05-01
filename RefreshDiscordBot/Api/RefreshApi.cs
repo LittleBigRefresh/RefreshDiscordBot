@@ -22,6 +22,9 @@ public class RefreshApi : IDisposable
     
     private async Task<TType> GetAsync<TType>(string endpoint, CancellationToken ct)
     {
+        this.Log(LogLevel.Info, "GET " + endpoint);
+        ct.ThrowIfCancellationRequested();
+        
         RefreshApiResponse<TType>? response = await this._client.GetFromJsonAsync<RefreshApiResponse<TType>>(endpoint, ct);
         if (response == null) throw new Exception("Couldn't deserialize/gather a response from the server.");
 
