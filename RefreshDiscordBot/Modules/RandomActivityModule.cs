@@ -15,10 +15,10 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
         this._activities =
         [
             new RandomUserActivity(),
-            new StatisticActivity(ActivityType.Watching, stats => $"{stats.ActiveUsers} players"),
-            new StatisticActivity(ActivityType.Playing, stats => $"{stats.TotalLevels} levels"),
-            new StatisticActivity(ActivityType.Playing, stats => $"with {stats.CurrentIngamePlayersCount} online players"),
-            new StatisticActivity(ActivityType.CustomStatus, stats => $"{stats.TotalEvents} things have happened on Refresh"),
+            new StatisticActivity(ActivityType.Watching, stats => $"{stats.ActiveUsers:N0} players"),
+            new StatisticActivity(ActivityType.Playing, stats => $"{stats.TotalLevels:N0} levels"),
+            new StatisticActivity(ActivityType.Playing, stats => $"with {stats.CurrentIngamePlayersCount:N0} online players"),
+            new StatisticActivity(ActivityType.CustomStatus, stats => $"{stats.TotalEvents:N0} things have happened on Refresh"),
             new Activity(ActivityType.CustomStatus, "https://littlebigrefresh.com"),
             new Activity(ActivityType.CustomStatus, "Getting 100CR for a mod giveaway"),
             new Activity(ActivityType.Playing, "Clockworx 2 for the 1000th time"),
@@ -37,6 +37,8 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
             new Activity(ActivityType.CustomStatus, "fixed in the rewrite"),
             new Activity(ActivityType.CustomStatus, "#ful-memes revival arc when"),
             new Activity(ActivityType.Watching, "YOU, specifically"),
+            new UncachedActivity(ActivityType.CustomStatus, () => $"PS4 support releases in {Random.Shared.Next(1, 100):N0} days"),
+            new UncachedActivity(ActivityType.CustomStatus, () => $"PSP support will release in -{(DateTimeOffset.UtcNow - DateTimeOffset.Parse("11/11/2023 11:04:00 AM")).Days:N0}"),
         ];
         
         return Task.CompletedTask;
@@ -102,6 +104,21 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
         {
             this._func = func;
             this.Type = type;
+        }
+    }
+
+    private class UncachedActivity : Activity
+    {
+        private readonly Func<string> _func;
+        private readonly ActivityType _activityType;
+
+        public override string Text => _func();
+        public override ActivityType Type => _activityType;
+        
+        public UncachedActivity(ActivityType activityType, Func<string> func)
+        {
+            this._activityType = activityType;
+            this._func = func;
         }
     }
 
