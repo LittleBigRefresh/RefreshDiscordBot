@@ -6,5 +6,7 @@ metadata:
 data:
   RDB_USE_ENV: "true"
   RDB_API_BASE_URL: "http://refresh-gameserver/api/v3/"
-  RDB_WEB_URL: "https://example.com"
+  RDB_WEB_URL: "https://example.com/"
+  RDB_UPTIME_KUMA_URL: "https://status.example.com"
   RDB_PLAYERS_ONLINE_CHANNEL: "1234"
+  RDB_SERVER_STATUS_CHANNEL: "0"

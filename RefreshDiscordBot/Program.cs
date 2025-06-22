@@ -24,7 +24,9 @@ if (bool.TryParse(Environment.GetEnvironmentVariable("RDB_USE_ENV"), out bool us
         DiscordToken = Environment.GetEnvironmentVariable("DISCORD_TOKEN") ?? throw new Exception("DISCORD_TOKEN was not provided"),
         ApiBaseUrl = Environment.GetEnvironmentVariable("RDB_API_BASE_URL") ?? throw new Exception("RDB_API_BASE_URL was not provided"),
         WebUrl = Environment.GetEnvironmentVariable("RDB_WEB_URL") ?? throw new Exception("RDB_WEB_URL was not provided"),
-        PlayersOnlineChannel = ulong.Parse(Environment.GetEnvironmentVariable("RDB_PLAYERS_ONLINE_CHANNEL") ?? throw new Exception("RDB_PLAYERS_ONLINE_CHANNEL was not provided"))
+        UptimeKumaUrl = Environment.GetEnvironmentVariable("RDB_UPTIME_KUMA_URL") ?? "",
+        PlayersOnlineChannel = ulong.Parse(Environment.GetEnvironmentVariable("RDB_PLAYERS_ONLINE_CHANNEL") ?? throw new Exception("RDB_PLAYERS_ONLINE_CHANNEL was not provided")),
+        ServerStatusChannel = ulong.Parse(Environment.GetEnvironmentVariable("RDB_SERVER_STATUS_CHANNEL") ?? "0"),
     };
 }
 else if (File.Exists("config.json"))
