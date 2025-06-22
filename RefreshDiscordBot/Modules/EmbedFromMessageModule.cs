@@ -6,8 +6,11 @@ using RefreshDiscordBot.Api.Types;
 
 namespace RefreshDiscordBot.Modules;
 
-public partial class EmbedFromMessageModule(Bot bot, Logger logger) : Module(bot, logger)
+public partial class EmbedFromMessageModule : Module
 {
+    public EmbedFromMessageModule(Bot bot, Logger logger) : base(bot, logger)
+    {}
+
     [GeneratedRegex("u:[a-zA-Z0-9_-]{3,16}")]
     public static partial Regex UsernameRegex();
     
@@ -22,8 +25,8 @@ public partial class EmbedFromMessageModule(Bot bot, Logger logger) : Module(bot
                 .WithTitle($"{user.Username}'s profile")
                 .WithDescription(user.Description)
                 .WithTimestamp(user.JoinDate)
-                .WithUrl($"https://lbp.littlebigrefresh.com/u/{user.UserId}")
-                .WithThumbnailUrl($"https://lbp.littlebigrefresh.com/api/v3/assets/{user.IconHash}/image")
+                .WithUrl($"{Bot.Config.WebUrl}/u/{user.UserId}")
+                .WithThumbnailUrl($"{Bot.Config.WebUrl}/api/v3/assets/{user.IconHash}/image")
                 .WithColor(0x2A1936)
                 .Build();
             

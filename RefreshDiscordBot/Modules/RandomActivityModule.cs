@@ -5,10 +5,14 @@ using RefreshDiscordBot.Api.Types;
 namespace RefreshDiscordBot.Modules;
 
 // port from moniku
-public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
+public class RandomActivityModule : Module
 {
     protected override uint RunFrequency => 120_000;
     private List<Activity> _activities = null!;
+
+    public RandomActivityModule(Bot bot, Logger logger) : base(bot, logger)
+    {
+    }
 
     public override Task Ready()
     {
@@ -19,7 +23,7 @@ public class RandomActivityModule(Bot bot, Logger logger) : Module(bot, logger)
             new StatisticActivity(ActivityType.Playing, stats => $"{stats.TotalLevels:N0} levels"),
             new StatisticActivity(ActivityType.Playing, stats => $"with {stats.CurrentIngamePlayersCount:N0} online players"),
             new StatisticActivity(ActivityType.CustomStatus, stats => $"{stats.TotalEvents:N0} things have happened on Refresh"),
-            new Activity(ActivityType.CustomStatus, "https://littlebigrefresh.com"),
+            new Activity(ActivityType.CustomStatus, "https://lbpbonsai.com"),
             new Activity(ActivityType.CustomStatus, "Getting 100CR for a mod giveaway"),
             new Activity(ActivityType.Playing, "Clockworx 2 for the 1000th time"),
             new Activity(ActivityType.CustomStatus, "Sackboy gaming"),

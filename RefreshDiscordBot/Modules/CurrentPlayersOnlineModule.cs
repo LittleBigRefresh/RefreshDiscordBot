@@ -5,7 +5,7 @@ using RefreshDiscordBot.Api.Types;
 
 namespace RefreshDiscordBot.Modules;
 
-public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, logger)
+public class CurrentPlayersOnlineModule : Module
 {
     // run once every 5 minutes (plus one second to offset potential rate limit)
     // unfortunately channel edits are pretty heavily rate limited
@@ -16,6 +16,10 @@ public class CurrentPlayersOnlineModule(Bot bot, Logger logger) : Module(bot, lo
     private const string Header = "Players Online: ";
 
     private SocketVoiceChannel _channel = null!;
+
+    public CurrentPlayersOnlineModule(Bot bot, Logger logger) : base(bot, logger)
+    {
+    }
 
     public override async Task Ready()
     {
