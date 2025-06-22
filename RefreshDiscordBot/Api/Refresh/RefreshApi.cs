@@ -1,9 +1,8 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using NotEnoughLogs;
-using RefreshDiscordBot.Api.Types;
+using RefreshDiscordBot.Api.Refresh.Types;
 
-namespace RefreshDiscordBot.Api;
+namespace RefreshDiscordBot.Api.Refresh;
 
 public class RefreshApi : IDisposable
 {

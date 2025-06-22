@@ -1,7 +1,7 @@
 using Discord;
 using Discord.WebSocket;
 using NotEnoughLogs;
-using RefreshDiscordBot.Api.Types;
+using RefreshDiscordBot.Api.Refresh.Types;
 using RefreshDiscordBot.Configuration;
 
 namespace RefreshDiscordBot.Modules;

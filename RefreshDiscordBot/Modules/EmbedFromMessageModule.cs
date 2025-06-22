@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Discord;
 using Discord.WebSocket;
 using NotEnoughLogs;
-using RefreshDiscordBot.Api.Types;
+using RefreshDiscordBot.Api.Refresh.Types;
 
 namespace RefreshDiscordBot.Modules;
 

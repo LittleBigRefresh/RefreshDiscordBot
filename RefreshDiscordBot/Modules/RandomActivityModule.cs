@@ -1,6 +1,6 @@
 using Discord;
 using NotEnoughLogs;
-using RefreshDiscordBot.Api.Types;
+using RefreshDiscordBot.Api.Refresh.Types;
 
 namespace RefreshDiscordBot.Modules;
 

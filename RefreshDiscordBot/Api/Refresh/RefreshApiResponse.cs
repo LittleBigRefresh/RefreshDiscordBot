@@ -1,4 +1,4 @@
-namespace RefreshDiscordBot.Api;
+namespace RefreshDiscordBot.Api.Refresh;
 
 public class RefreshApiResponse<TType>
 {

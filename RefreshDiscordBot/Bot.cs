@@ -3,6 +3,7 @@ using Discord;
 using Discord.WebSocket;
 using NotEnoughLogs;
 using RefreshDiscordBot.Api;
+using RefreshDiscordBot.Api.Refresh;
 using RefreshDiscordBot.Configuration;
 using RefreshDiscordBot.Modules;
 
@@ -42,10 +43,10 @@ public class Bot : IDisposable
         this._modules.Add(new RandomActivityModule(this, this._logger));
         this._modules.Add(new EmbedFromMessageModule(this, this._logger));
 
-        if (this.Config.PlayersOnlineChannel != 0)
-            this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
-        // if (this.Config.ServerStatusChannel != 0)
-            // this._modules.Add(new ServerStatusModule(this, this._logger));
+        // if (this.Config.PlayersOnlineChannel != 0)
+            // this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
+        if (this.Config.ServerStatusChannel != 0 && !string.IsNullOrWhiteSpace(this.Config.UptimeKumaUrl))
+            this._modules.Add(new ServerStatusModule(this, this._logger));
     }
 
     private Task OnLog(LogMessage message)
