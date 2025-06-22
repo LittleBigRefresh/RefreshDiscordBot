@@ -38,6 +38,16 @@ spec:
                 configMapKeyRef:
                   name: refresh-discord-bot-config
                   key: RDB_PLAYERS_ONLINE_CHANNEL
+            - name: RDB_UPTIME_KUMA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_UPTIME_KUMA_URL
+            - name: RDB_SERVER_STATUS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_SERVER_STATUS_CHANNEL
             - name: DISCORD_TOKEN
               valueFrom:
                 secretKeyRef:
