@@ -23,7 +23,7 @@ FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine AS final
 
 # Add non-root user
 RUN set -eux && \
-apk add --no-cache su-exec && \
+apk add --no-cache su-exec icu-libs icu-data-full && \
 su-exec nobody true && \
 addgroup -g 1001 refresh && \
 adduser -D -h /refresh -u 1001 -G refresh refresh && \
@@ -32,7 +32,5 @@ mkdir -p /refresh/app
 COPY --from=build /build/publish/publish /refresh/app
 
 RUN chown -R refresh:refresh /refresh
-
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 
 ENTRYPOINT ["su-exec", "refresh:refresh", "/refresh/app/RefreshDiscordBot"]
