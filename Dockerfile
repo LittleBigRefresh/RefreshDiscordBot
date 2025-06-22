@@ -33,4 +33,6 @@ COPY --from=build /build/publish/publish /refresh/app
 
 RUN chown -R refresh:refresh /refresh
 
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
 ENTRYPOINT ["su-exec", "refresh:refresh", "/refresh/app/RefreshDiscordBot"]
