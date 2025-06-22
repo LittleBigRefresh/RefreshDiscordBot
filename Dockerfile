@@ -21,9 +21,14 @@ RUN dotnet publish RefreshDiscordBot -c Release --property:OutputPath=/build/pub
 
 FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine AS final
 
+ENV \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8
+
 # Add non-root user
 RUN set -eux && \
-apk add --no-cache su-exec icu-libs icu-data-full && \
+apk add --no-cache su-exec icu-libs icu-data-full tzdata && \
 su-exec nobody true && \
 addgroup -g 1001 refresh && \
 adduser -D -h /refresh -u 1001 -G refresh refresh && \
