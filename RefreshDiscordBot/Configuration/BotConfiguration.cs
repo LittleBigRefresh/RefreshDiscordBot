@@ -6,4 +6,5 @@ public class BotConfiguration
     public string WebUrl { get; set; } = "https://lbp.lbpbonsai.com/";
     public string DiscordToken { get; set; } = "asdf";
     public ulong PlayersOnlineChannel { get; set; } = 1232216364329074699ul;
+    public ulong ServerStatusChannel { get; set; } = 1232216364329074699ul;
 }

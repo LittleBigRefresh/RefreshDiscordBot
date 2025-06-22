@@ -38,10 +38,14 @@ public class Bot : IDisposable
         this.Api = new RefreshApi(this._logger, config.ApiBaseUrl);
         
         this._logger.LogInfo("Bot", "Initialized bot");
-        
-        this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
+
         this._modules.Add(new RandomActivityModule(this, this._logger));
         this._modules.Add(new EmbedFromMessageModule(this, this._logger));
+
+        if (this.Config.PlayersOnlineChannel != 0)
+            this._modules.Add(new CurrentPlayersOnlineModule(this, this._logger));
+        // if (this.Config.ServerStatusChannel != 0)
+            // this._modules.Add(new ServerStatusModule(this, this._logger));
     }
 
     private Task OnLog(LogMessage message)
