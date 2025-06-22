@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: refresh-discord-bot
+  namespace: refresh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: refresh-discord-bot
+  template:
+    metadata:
+      labels:
+        app: refresh-discord-bot
+    spec:
+      containers:
+        - name: bot
+          image: ghcr.io/littlebigrefresh/refresh-discord-bot:master
+          imagePullPolicy: Always
+          env:
+            - name: RDB_USE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_USE_ENV
+            - name: RDB_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_API_BASE_URL
+            - name: RDB_WEB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_WEB_URL
+            - name: RDB_PLAYERS_ONLINE_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: refresh-discord-bot-config
+                  key: RDB_PLAYERS_ONLINE_CHANNEL
+            - name: DISCORD_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: refresh-discord-bot-secret
+                  key: DISCORD_TOKEN
+#      initContainers:
+#        - name: wait-for-gameserver
+#          image: busybox
+#          command: ['sh', '-c', 'until nslookup refresh-gameserver; do echo waiting for refresh-gameserver; sleep 2; done']

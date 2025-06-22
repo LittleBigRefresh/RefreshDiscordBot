@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: refresh-discord-bot-config
+  namespace: refresh
+data:
+  RDB_USE_ENV: "true"
+  RDB_API_BASE_URL: "http://refresh-gameserver/api/v3/"
+  RDB_WEB_URL: "https://example.com"
+  RDB_PLAYERS_ONLINE_CHANNEL: "1234"
