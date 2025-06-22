@@ -17,7 +17,17 @@ Logger logger = new([new ConsoleSink()], new LoggerConfiguration
 
 BotConfiguration? config = null;
 
-if (File.Exists("config.json"))
+if (bool.TryParse(Environment.GetEnvironmentVariable("RDB_USE_ENV"), out bool useEnv) && useEnv)
+{
+    config = new BotConfiguration()
+    {
+        DiscordToken = Environment.GetEnvironmentVariable("DISCORD_TOKEN") ?? throw new Exception("DISCORD_TOKEN was not provided"),
+        ApiBaseUrl = Environment.GetEnvironmentVariable("RDB_API_BASE_URL") ?? throw new Exception("RDB_API_BASE_URL was not provided"),
+        WebUrl = Environment.GetEnvironmentVariable("RDB_WEB_URL") ?? throw new Exception("RDB_WEB_URL was not provided"),
+        PlayersOnlineChannel = ulong.Parse(Environment.GetEnvironmentVariable("RDB_PLAYERS_ONLINE_CHANNEL") ?? throw new Exception("RDB_PLAYERS_ONLINE_CHANNEL was not provided"))
+    };
+}
+else if (File.Exists("config.json"))
 {
     config = JsonSerializer.Deserialize<BotConfiguration>(File.ReadAllText("config.json"));
 }
