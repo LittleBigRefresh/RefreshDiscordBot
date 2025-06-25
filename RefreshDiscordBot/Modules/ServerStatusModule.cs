@@ -24,19 +24,17 @@ public class ServerStatusModule : VoiceChannelTextModule
         
         if (heartbeat == null)
             return "Unknown";
-        
-        StatusType status = StatusType.Pending;
 
         List<List<HeartbeatList>> lists = heartbeat.HeartbeatList.Values.ToList();
-        if (lists.All(l => l.All(h => h.Status is StatusType.Up or StatusType.Pending)))
+        if (lists.All(l => (l.LastOrDefault()?.Status ?? StatusType.Unknown) is StatusType.Up or StatusType.Pending))
             return "OK";
         
-        if (lists.Any(l => l.Any(h => h.Status == StatusType.Maintenance)))
-            return "Maintenance";
+        if (lists.Any(l => (l.LastOrDefault()?.Status ?? StatusType.Unknown) == StatusType.Maintenance))
+            return "🔧 Under Maintenance";
         
-        if (lists.All(l => l.All(h => h.Status == StatusType.Down)))
-            return "Down";
+        if (lists.All(l => (l.LastOrDefault()?.Status ?? StatusType.Unknown) == StatusType.Down))
+            return "❌ Down";
         
-        return "Degraded";
+        return "⚠️ Degraded";
     }
 }
